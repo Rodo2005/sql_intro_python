@@ -57,16 +57,37 @@ def fill(group):
     conn.commit()
     conn.close()
 
-def fetch(id): # Hay que re escribir para que pueda imprimir una linea en particular
+def fetch(id): 
     conn = sqlite3.connect('libreria.db')
     c = conn.cursor()
-    c.execute("SELECT id FROM libros")
+    c.execute("SELECT * FROM libros")
     data = c.fetchall()
-    print(data)
+    if id == 0:
+        for row in data:
+            print(row)
+    else:
+        for row in data:
+            if row[0] == id:
+                print(row)
+                break
+            if id > len(data):
+                print('ERROR  No existe dicho "id"')
+                break
     print('')
+
+def search_author(book_title):
+    conn = sqlite3.connect('libreria.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM libros")
+    data = c.fetchall()
+    for row in data:
+        if row[1] == book_title:
+            print(row[3])
+
 
 if __name__ == '__main__':
     create_schema()
     archivo_csv()
     fill(group)
-    fetch(id)
+    fetch(int(input('Ingrese el valor de "id": ')))
+    search_author('Relato de un naufrago')
